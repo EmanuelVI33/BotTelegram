@@ -22,8 +22,7 @@ export class DIdService {
         headers: {
           accept: 'application/json',
           'content-type': 'application/json',
-          authorization:
-            'Basic dmFjYWVtYW51ZWwyNTVAZ21haWwuY29t:BIQ5LvuWs-C7huytw2swf',
+          authorization: `Basic ${process.env.API_KEY_D_ID}`,
         },
       });
 
@@ -44,8 +43,7 @@ export class DIdService {
       method: 'GET',
       headers: {
         accept: 'application/json',
-        authorization:
-          'Basic dmFjYWVtYW51ZWwyNTVAZ21haWwuY29t:BIQ5LvuWs-C7huytw2swf', // Reemplaza con tu token de autorización real
+        authorization: `Basic ${process.env.API_KEY_D_ID}`, // Reemplaza con tu token de autorización real
       },
     };
 
