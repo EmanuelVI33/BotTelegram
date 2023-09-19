@@ -5,14 +5,14 @@ import { DIdService } from './d-id.service';
 export class DIdController {
   constructor(private readonly apiService: DIdService) {}
 
-  @Post()
-  async createVideo(@Body() body: { message: string }): Promise<void> {
-    const { message } = body;
-    await this.apiService.createVideoWithMessage(message);
-  }
+  // @Post()
+  // async createVideo(@Body() body: { message: string }): Promise<void> {
+  //   const { message } = body;
+  //   await this.apiService.createVideoWithMessage(message);
+  // }
 
-  @Get(':id')
-  async getVideoById(@Param('id') id: string) {
-    return this.apiService.getVideoById(id);
-  }
+  // @Get(':id')
+  // async getVideoById(@Param('id') id: string) {
+  //   return this.apiService.getVideoById(id);
+  // }
 }
