@@ -25,6 +25,7 @@ export class TelegramBotService {
       const message = ctx.message as Message;
       const { text } = message;
       if (text) {
+        console.log('Mesnaje desde telegram: ' + text);
         this.messageReceived.emit('message_received', { text });
       }
     });

@@ -2,7 +2,6 @@ import { Controller, Sse } from '@nestjs/common';
 import { AppService } from './app.service';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Observable, Subject } from 'rxjs';
-import { AudiuApiService } from './audiu-api/audiu-api.service';
 
 export interface MessageEvent {
   data: string | object;
@@ -13,19 +12,21 @@ export interface MessageEvent {
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private audiuApiService: AudiuApiService,
-  ) {}
+  constructor(private readonly appService: AppService) {}
 
   private messageSubject = new Subject<string>();
 
-  @OnEvent('message_received') // Escuchar el evento 'message_received'
+  @OnEvent('message_received')
   async handleMessageReceivedEvent(text: { text: string }) {
     if (text) {
       try {
-        const audioId = await this.audiuApiService.searchTrack(text.text);
-        this.messageSubject.next(audioId);
+        console.log('Texto emitido desde telegram' + text.text);
+        const multimediaList = await this.appService.searchMultimedia(
+          text.text,
+        );
+
+        // Envía la lista completa al cliente a través del evento SSE
+        this.messageSubject.next(multimediaList);
       } catch (error) {
         console.error('Error al obtener el audio:', error);
         this.messageSubject.next('Error al buscar audio');
@@ -43,6 +44,19 @@ export class AppController {
     });
   }
 }
+
+// @OnEvent('message_received') // Escuchar el evento 'message_received'
+// async handleMessageReceivedEvent(text: { text: string }) {
+//   if (text) {
+//     try {
+//       const audioId = await this.audiuApiService.searchTrack(text.text);
+//       this.messageSubject.next(audioId);
+//     } catch (error) {
+//       console.error('Error al obtener el audio:', error);
+//       this.messageSubject.next('Error al buscar audio');
+//     }
+//   }
+// }
 
 // import { Controller, Sse } from '@nestjs/common';
 // import { AppService } from './app.service';
