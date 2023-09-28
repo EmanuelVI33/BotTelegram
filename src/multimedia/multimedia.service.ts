@@ -9,9 +9,7 @@ export class MultimediaService {
 
   constructor(private readonly fileService: FileService) {
     this.multimediaList = new LinkedList<Multimedia>();
-
     this.loadMultimediaListFromFile();
-    this.addMultimedia(new Video());
   }
 
   private saveMultimediaListToFile() {
