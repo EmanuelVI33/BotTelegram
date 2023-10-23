@@ -27,6 +27,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/platform-express": "^10.2.5",
+    "@nestjs/typeorm": "^10.0.0",
     "api": "^6.1.1",
     "axios": "^1.5.0",
     "class-transformer": "^0.5.1",
@@ -35,7 +36,9 @@
     "node-telegram-bot-api": "^0.63.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "sqlite3": "^5.1.6",
     "telegraf": "^4.13.1",
+    "typeorm": "^0.3.17",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

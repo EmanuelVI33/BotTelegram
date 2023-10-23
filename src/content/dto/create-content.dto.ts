@@ -15,10 +15,18 @@ export class CreateContentDto {
   readonly description: string;
 
   @IsNumber()
-  @IsNotEmpty()
-  readonly duration: number;
+  @IsOptional()
+  readonly duration?: number;
 
   @IsString()
-  @IsNotEmpty()
-  readonly fileUrl: string;
+  @IsOptional()
+  readonly fileUrl?: string;
+
+  @IsString()
+  @IsOptional()
+  readonly localePath?: string;
+
+  @IsString()
+  @IsOptional()
+  readonly presenter?: string;
 }

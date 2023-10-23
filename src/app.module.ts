@@ -12,10 +12,18 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProgramModule } from './program/program.module';
 import { ContentModule } from './content/content.module';
 import { PresenterModule } from './presenter/presenter.module';
+import { ElementModule } from './designed/element/element.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'database.sqlite', // Nombre del archivo de la base de datos
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true, // Esto crea automáticamente las tablas al iniciar la aplicación (solo para desarrollo)
+    }),
     EventEmitterModule.forRoot(),
     MongooseModule.forRoot('mongodb://localhost:27017/content_programming'),
     TelegramBotModule,
@@ -24,6 +32,7 @@ import { PresenterModule } from './presenter/presenter.module';
     ContentModule,
     ProgramModule,
     PresenterModule,
+    ElementModule,
   ],
   controllers: [AppController],
   providers: [AppService, MediaFileManager, FileService],

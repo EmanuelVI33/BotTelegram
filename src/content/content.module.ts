@@ -8,9 +8,10 @@ import { ProgramModule } from '../program/program.module';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Content.name, schema: ContentSchema }]),
-    ProgramModule,
+    // ProgramModule,
   ],
   controllers: [ContentController],
   providers: [ContentService],
+  exports: [ContentService],
 })
 export class ContentModule {}

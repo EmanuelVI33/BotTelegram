@@ -9,7 +9,7 @@ async function bootstrap() {
   config();
   const app = await NestFactory.create(AppModule);
 
-  app.get(TelegramBotService);
+  // app.get(TelegramBotService);
   // telegramService.startBot();
 
   app.useGlobalPipes(
@@ -20,11 +20,11 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: 'http://localhost:5173', // Reemplaza con la URL de tu aplicación React
+    origin: 'http://localhost:3000', // Reemplaza con la URL de tu aplicación React
   });
 
   app.use('/public/media/audio', express.static('public/media/audio'));
 
-  await app.listen(3000);
+  await app.listen(3010);
 }
 bootstrap();

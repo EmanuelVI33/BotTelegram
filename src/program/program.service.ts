@@ -35,7 +35,7 @@ export class ProgramService {
 
   async update(
     id: string,
-    updateProgramDto: UpdateProgramDto,
+    updateProgramDto: CreateProgramDto,
   ): Promise<Program> {
     return this.programModel
       .findByIdAndUpdate(id, updateProgramDto, { new: true })
@@ -66,6 +66,8 @@ export class ProgramService {
   ): Promise<Program> {
     // Encuentra el programa por su ID
     const program = await this.programModel.findById(programId);
+
+    console.log(`Encontro program ${program}`);
 
     if (!program) {
       throw new Error('Program not found');

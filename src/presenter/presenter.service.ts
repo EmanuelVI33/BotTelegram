@@ -1,26 +1,40 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreatePresenterDto } from './dto/create-presenter.dto';
-import { UpdatePresenterDto } from './dto/update-presenter.dto';
+import { Presenter } from './entities/presenter.entity';
 
 @Injectable()
 export class PresenterService {
-  create(createPresenterDto: CreatePresenterDto) {
-    return 'This action adds a new presenter';
+  constructor(
+    @InjectModel(Presenter.name)
+    private readonly presenterModel: Model<Presenter>,
+  ) {}
+
+  async createPresenter(presenterDto: CreatePresenterDto): Promise<Presenter> {
+    const createdPresenter = new this.presenterModel(presenterDto);
+    return await createdPresenter.save();
   }
 
-  findAll() {
-    return `This action returns all presenter`;
+  async findAllPresenters(): Promise<Presenter[]> {
+    return await this.presenterModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} presenter`;
+  async findOnePresenter(id: string): Promise<Presenter | null> {
+    return await this.presenterModel.findById(id).exec();
   }
 
-  update(id: number, updatePresenterDto: UpdatePresenterDto) {
-    return `This action updates a #${id} presenter`;
+  async updatePresenter(
+    id: string,
+    presenterDto: CreatePresenterDto,
+  ): Promise<Presenter | null> {
+    const updatedPresenter = await this.presenterModel
+      .findByIdAndUpdate(id, presenterDto, { new: true })
+      .exec();
+    return updatedPresenter;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} presenter`;
+  async deletePresenter(id: string): Promise<Presenter | null> {
+    return await this.presenterModel.findByIdAndDelete(id).exec();
   }
 }

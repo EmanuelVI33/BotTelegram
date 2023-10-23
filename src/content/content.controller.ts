@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Body,
+  NotFoundException,
 } from '@nestjs/common';
 import { ContentService } from './content.service';
 import { Content } from './entities/content.entity';
@@ -51,17 +52,31 @@ export class ContentController {
   ): Promise<any> {
     try {
       // Crea el contenido
-      const createdContent = await this.contentService.createContent(
-        programId,
-        contentDto,
-      );
+      const createdContent =
+        await this.contentService.createContent(contentDto);
+
+      if (contentDto.type === 'video') {
+      }
 
       return {
         programId: programId,
         content: createdContent,
       };
     } catch (error) {
-      return { error: 'Custom error message' };
+      return {
+        error: 'Error creating content',
+        message: error.message, // Agrega el mensaje de error original
+      };
     }
+  }
+
+  @Get(':id')
+  async findOneContentWithPresenter(@Param('id') id: string) {
+    const contentWithPresenter =
+      await this.contentService.findOneContentWithPresenter(id);
+    if (!contentWithPresenter) {
+      throw new NotFoundException('Content not found');
+    }
+    return contentWithPresenter;
   }
 }

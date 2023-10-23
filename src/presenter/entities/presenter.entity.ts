@@ -6,11 +6,11 @@ export class Presenter extends Document {
   @Prop({ required: true })
   name: string;
 
-  @Prop()
-  language: string;
+  @Prop({})
+  localePath: string;
 
   @Prop()
-  voice: string;
+  voice?: string;
 }
 
 export const PresenterSchema = SchemaFactory.createForClass(Presenter);

@@ -1,34 +1,72 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PresenterService } from './presenter.service';
 import { CreatePresenterDto } from './dto/create-presenter.dto';
-import { UpdatePresenterDto } from './dto/update-presenter.dto';
 
 @Controller('presenter')
 export class PresenterController {
   constructor(private readonly presenterService: PresenterService) {}
 
   @Post()
-  create(@Body() createPresenterDto: CreatePresenterDto) {
-    return this.presenterService.create(createPresenterDto);
+  async createPresenter(@Body() presenterDto: CreatePresenterDto) {
+    try {
+      const createdPresenter =
+        await this.presenterService.createPresenter(presenterDto);
+      return createdPresenter;
+    } catch (error) {
+      throw new BadRequestException('Error creating presenter');
+    }
   }
 
   @Get()
-  findAll() {
-    return this.presenterService.findAll();
+  async findAllPresenters() {
+    const presenters = await this.presenterService.findAllPresenters();
+    return presenters;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.presenterService.findOne(+id);
+  async findOnePresenter(@Param('id') id: string) {
+    const presenter = await this.presenterService.findOnePresenter(id);
+    if (!presenter) {
+      throw new NotFoundException('Presenter not found');
+    }
+    return presenter;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePresenterDto: UpdatePresenterDto) {
-    return this.presenterService.update(+id, updatePresenterDto);
+  @Put(':id')
+  async updatePresenter(
+    @Param('id') id: string,
+    @Body() presenterDto: CreatePresenterDto,
+  ) {
+    try {
+      const updatedPresenter = await this.presenterService.updatePresenter(
+        id,
+        presenterDto,
+      );
+      if (!updatedPresenter) {
+        throw new NotFoundException('Presenter not found');
+      }
+      return updatedPresenter;
+    } catch (error) {
+      throw new BadRequestException('Error updating presenter');
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.presenterService.remove(+id);
+  async deletePresenter(@Param('id') id: string) {
+    const deletedPresenter = await this.presenterService.deletePresenter(id);
+    if (!deletedPresenter) {
+      throw new NotFoundException('Presenter not found');
+    }
+    return { message: 'Presenter deleted successfully' };
   }
 }

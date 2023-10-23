@@ -1,17 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Content } from './entities/content.entity';
 import { CreateContentDto } from './dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
-import { ProgramService } from 'src/program/program.service';
+// import { ProgramService } from 'src/program/program.service';
 
 @Injectable()
 export class ContentService {
   constructor(
     @InjectModel(Content.name)
-    private readonly contentModel: Model<Content>,
-    private readonly programService: ProgramService,
+    private readonly contentModel: Model<Content>, // private readonly programService: ProgramService,
   ) {}
 
   async findAll(): Promise<Content[]> {
@@ -40,7 +39,7 @@ export class ContentService {
   }
 
   async createContent(
-    programId: string,
+    // programId: string,
     contentDto: CreateContentDto,
   ): Promise<Content> {
     try {
@@ -48,15 +47,38 @@ export class ContentService {
       const createdContent = new this.contentModel(contentDto);
       const savedContent = await createdContent.save();
 
-      // Asocia el ID del contenido al programa
-      await this.programService.addContentToProgram(
-        programId,
-        savedContent._id,
-      );
+      // // Asocia el ID del contenido al programa
+      // await this.programService.addContentToProgram(
+      //   programId,
+      //   savedContent._id,
+      // );
 
       return savedContent;
     } catch (error) {
-      throw new Error('Error creating content');
+      throw error;
+    }
+  }
+
+  //  Almacenar varios contenidos
+  // async createContents(
+  //   programId: string,
+  //   contentsData: CreateContentDto[],
+  // ): Promise<string[]> {
+  //   const createdContentIds = [];
+
+  //   for (const contentData of contentsData) {
+  //     const createdContent = await this.createContent(programId, contentData);
+  //     createdContentIds.push(createdContent._id);
+  //   }
+
+  //   return createdContentIds;
+  // }
+
+  async findOneContentWithPresenter(id: string): Promise<Content | null> {
+    try {
+      return await this.contentModel.findById(id).populate('presenter').exec();
+    } catch (error) {
+      throw new NotFoundException('Content not found');
     }
   }
 }
