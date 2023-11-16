@@ -4,13 +4,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Injectable } from '@nestjs/common';
 
-interface Data {
-  id: string;
-  filePath: string;
-}
-
 @Injectable()
 export class MediaFileManager {
+  basePath = 'public/media';
+
   private static MEDIA_DIRECTORY = path.join(
     __dirname,
     '../..',
@@ -25,25 +22,24 @@ export class MediaFileManager {
     }
   }
 
-  // Método para descargar y almacenar un archivo multimedia
-  async downloadAndStoreMedia(url: string, type: string): Promise<Data | null> {
+  async downloadAndStoreMedia(
+    type: string,
+    fileBuffer: any,
+  ): Promise<string | null> {
     try {
-      // Verifica el tipo de multimedia y crea una ruta específica
       const directory = path.join(MediaFileManager.MEDIA_DIRECTORY, type);
       if (!fs.existsSync(directory)) {
-        fs.mkdirSync(directory);
+        fs.mkdirSync(directory, { recursive: true });
       }
 
-      const fileExtension = '.mp3';
-      const id = `${uuidv4()}${fileExtension}`; // Generar id y mantener la extensión
+      const { originalname } = fileBuffer;
 
-      const filePath = path.join(directory, id); // Crear ruta
+      const id = `${uuidv4()}${originalname}`;
+      const filePath = path.join(directory, id);
 
-      // Realiza la descarga y almacena el archivo
-      await this.download(url, filePath);
+      fs.writeFileSync(filePath, fileBuffer.buffer);
 
-      // Devuelve la ruta de referencia
-      return { id, filePath };
+      return `${this.basePath}/${type}/${id}`;
     } catch (error) {
       console.error(
         'Error al descargar y almacenar el archivo multimedia:',
@@ -52,6 +48,41 @@ export class MediaFileManager {
       return null;
     }
   }
+
+  // // Método para descargar y almacenar un archivo multimedia
+  // async downloadAndStoreMedia(url: string, type: string): Promise<Data | null> {
+  //   try {
+  //     // Verifica el tipo de multimedia y crea una ruta específica
+  //     const directory = path.join(MediaFileManager.MEDIA_DIRECTORY, type);
+  //     if (!fs.existsSync(directory)) {
+  //       fs.mkdirSync(directory);
+  //     }
+
+  //     // const fileExtension = '.mp3';
+
+  //     const fileExtension = fileExtensions[type];
+  //     if (!fileExtension) {
+  //       // Manejar un tipo no válido o desconocido
+  //       return null;
+  //     }
+
+  //     const id = `${uuidv4()}${fileExtension}`; // Generar id y mantener la extensión
+
+  //     const filePath = path.join(directory, id); // Crear ruta
+
+  //     // Realiza la descarga y almacena el archivo
+  //     await this.download(url, filePath);
+
+  //     // Devuelve la ruta de referencia
+  //     return { id, filePath };
+  //   } catch (error) {
+  //     console.error(
+  //       'Error al descargar y almacenar el archivo multimedia:',
+  //       error,
+  //     );
+  //     return null;
+  //   }
+  // }
 
   async download(fileUrl: string, localFilePath: string) {
     try {

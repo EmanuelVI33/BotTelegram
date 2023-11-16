@@ -14,35 +14,35 @@ export interface MessageEvent {
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  private messageSubject = new Subject<string>();
+  // private messageSubject = new Subject<string>();
 
-  @OnEvent('message_received')
-  async handleMessageReceivedEvent(text: { text: string }) {
-    if (text) {
-      try {
-        console.log('Texto emitido desde telegram' + text.text);
-        const multimediaList = await this.appService.searchMultimedia(
-          text.text,
-        );
+  // @OnEvent('message_received')
+  // async handleMessageReceivedEvent(text: { text: string }) {
+  //   if (text) {
+  //     try {
+  //       console.log('Texto emitido desde telegram' + text.text);
+  //       const multimediaList = await this.appService.searchMultimedia(
+  //         text.text,
+  //       );
 
-        // Envía la lista completa al cliente a través del evento SSE
-        this.messageSubject.next(multimediaList);
-      } catch (error) {
-        console.error('Error al obtener el audio:', error);
-        this.messageSubject.next('Error al buscar audio');
-      }
-    }
-  }
+  //       // Envía la lista completa al cliente a través del evento SSE
+  //       this.messageSubject.next(multimediaList);
+  //     } catch (error) {
+  //       console.error('Error al obtener el audio:', error);
+  //       this.messageSubject.next('Error al buscar audio');
+  //     }
+  //   }
+  // }
 
-  @Sse('sse')
-  sse(): Observable<MessageEvent> {
-    return new Observable((observer) => {
-      this.messageSubject.subscribe((message) => {
-        const eventData = JSON.stringify({ message });
-        observer.next(new MessageEvent('message', { data: eventData }));
-      });
-    });
-  }
+  // @Sse('sse')
+  // sse(): Observable<MessageEvent> {
+  //   return new Observable((observer) => {
+  //     this.messageSubject.subscribe((message) => {
+  //       const eventData = JSON.stringify({ message });
+  //       observer.next(new MessageEvent('message', { data: eventData }));
+  //     });
+  //   });
+  // }
 }
 
 // @OnEvent('message_received') // Escuchar el evento 'message_received'

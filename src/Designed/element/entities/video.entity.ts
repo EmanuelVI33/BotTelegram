@@ -1,12 +1,11 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { ElementInfo } from './element-info.entity';
+import { Element } from './element.entity';
 
 @Entity()
 export class Video {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
-  // Incrustar campos
-  @Column(() => ElementInfo)
-  infoElement: ElementInfo;
+  @Column(() => Element)
+  element: Element;
 }

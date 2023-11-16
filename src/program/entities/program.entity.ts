@@ -1,23 +1,12 @@
-// program.model.ts
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Schema()
-export class Program extends Document {
-  @Prop({
-    unique: true,
-    index: true,
-  })
+export class Program {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
   name: string;
 
-  @Prop()
-  description: string;
-
-  @Prop({ type: [{ type: 'ObjectId', ref: 'Content' }] })
-  contents: string[];
-
-  // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Content' }) // Referencia al contenido
-  // contents: string[];
+  @Column()
+  duration: number;
 }
-
-export const ProgramSchema = SchemaFactory.createForClass(Program);
